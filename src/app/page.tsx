@@ -27,13 +27,17 @@ export default function Home() {
         />
         <SectionSpacer>
           <MaxWidthWrapper>
-            <HowItWorks />
+            <div id="how-it-works">
+              <HowItWorks />
+            </div>
           </MaxWidthWrapper>
         </SectionSpacer>
 
         <SectionSpacer size="none">
           <MaxWidthWrapper>
-            <WhyChooseUs />
+            <div id="features">
+              <WhyChooseUs />
+            </div>
           </MaxWidthWrapper>
         </SectionSpacer>
 
@@ -45,7 +49,9 @@ export default function Home() {
 
         <SectionSpacer only="bottom">
           <MaxWidthWrapper>
-            <ContactUs />
+            <div id="contact">
+              <ContactUs />
+            </div>
           </MaxWidthWrapper>
         </SectionSpacer>
       </main>
