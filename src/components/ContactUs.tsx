@@ -238,14 +238,11 @@ export default function ContactUs() {
                 <FormItem>
                   <FormLabel className="font-medium">Message</FormLabel>
                   <FormControl>
-                    <div className="relative group">
-                      <MessageSquare className="absolute left-3 top-3 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                      <Textarea 
+                   <Textarea 
                         placeholder="Tell us about your needs..." 
-                        className="resize-none pl-10 pt-2 min-h-[120px] rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 transition-all focus-visible:ring-primary" 
+                        className=" min-h-[120px] rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 transition-all focus-visible:ring-primary" 
                         {...field} 
                       />
-                    </div>
                   </FormControl>
                   <FormDescription>
                     Please provide details about your inquiry.

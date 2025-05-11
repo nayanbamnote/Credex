@@ -1,34 +1,44 @@
-import type { Step } from "./types"
+// HowItWorks.tsx or data/steps.ts
+import { Step } from './types';
 
-// Sample data - replace with your actual content
-const steps: Step[] = [
+export const steps: Step[] = [
   {
     id: 1,
-    title: "Discover",
+    title: "Upload License",
     subtitle:
-      "Begin your journey by exploring our platform's features and capabilities. Our intuitive interface makes it easy to find exactly what you need, when you need it, without any unnecessary complexity.",
-    description: ["Explore our extensive catalog", "Filter by your preferences", "Get personalized recommendations"],
-    image: "/placeholder.svg?height=600&width=500",
-    imageAlt: "Discovery process illustration",
+      "Quickly submit your unused or surplus software licenses through our intuitive upload interface.",
+    description: [
+      "Select your license file (e.g., PDF, DOC)",
+      "Provide license key and purchase details",
+      "Review and confirm submission"
+    ],
+    image: "/icons/upload-license.svg",          // replace with your real asset
+    imageAlt: "Upload license illustration",
   },
   {
     id: 2,
-    title: "Connect",
+    title: "Get Valuation",
     subtitle:
-      "Establish meaningful connections with service providers and experts in your field. Our secure communication channels ensure that your conversations remain private while our scheduling tools make coordination effortless.",
-    description: ["Instant messaging with providers", "Schedule appointments easily", "Secure communication channels"],
-    image: "/placeholder.svg?height=600&width=500",
-    imageAlt: "Connection process illustration",
+      "Our AI-driven engine instantly assesses your license’s market value and presents you with a competitive quote.",
+    description: [
+      "Automated price estimation",
+      "Transparent fee breakdown",
+      "Option to accept or negotiate"
+    ],
+    image: "/icons/valuation.svg",
+    imageAlt: "Valuation chart illustration",
   },
   {
     id: 3,
-    title: "Succeed",
+    title: "Get Paid",
     subtitle:
-      "Achieve your goals with our comprehensive support system. We provide detailed analytics, progress tracking, and personalized guidance to ensure you reach your objectives efficiently and effectively.",
-    description: ["Track your progress", "Get support when needed", "Celebrate your achievements"],
-    image: "/placeholder.svg?height=600&width=500",
-    imageAlt: "Success process illustration",
+      "Once you approve the quote, pick your payment method and receive funds securely within 24–48 hours.",
+    description: [
+      "Choose bank transfer, PayPal, or other methods",
+      "Instant payment notification",
+      "Secure, encrypted transactions"
+    ],
+    image: "/icons/get-paid.svg",
+    imageAlt: "Payment illustration",
   },
-]
-
-export { steps }
+];

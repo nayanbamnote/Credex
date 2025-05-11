@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import Image from "next/image"
 import { cn } from "@/lib/utils"
 import { ChevronDown, ChevronUp } from "lucide-react"
 import { steps } from "./data"
@@ -49,14 +48,14 @@ export default function HowItWorks() {
 
   return (
     <section
-      className="py-20 bg-background"
+      className="bg-background"
       aria-labelledby="how-it-works-title"
       onMouseEnter={pauseAnimation}
       onMouseLeave={resumeAnimation}
       onFocus={pauseAnimation}
       onBlur={resumeAnimation}
     >
-      <div className="container px-4 md:px-6">
+      <div className="">
         <div className="text-center mb-16">
           <h2 id="how-it-works-title" className="text-4xl font-bold tracking-tight sm:text-5xl mb-4">
             How It Works
@@ -66,10 +65,10 @@ export default function HowItWorks() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-[1fr_2fr] gap-8 items-center">
+        <div className="grid lg:grid-cols-[1fr_2fr] gap-8 items-start">
           <nav className="relative flex flex-col gap-8 mx-auto lg:mx-0 max-w-xs" aria-label="Process steps">
             <div
-              className="absolute left-6 top-6 w-0.5 bg-muted"
+              className="absolute left-14 top-6 w-0.5 bg-muted"
               style={{
                 height: "calc(100% - 12px)",
                 top: "6px",
@@ -90,7 +89,7 @@ export default function HowItWorks() {
               >
                 <div
                   className={cn(
-                    "relative z-10 flex h-12 w-12 items-center justify-center rounded-full border-2",
+                    "relative z-10 flex shrink-0 h-12 w-12 items-center justify-center rounded-full border-2",
                     "transition-colors duration-300",
                     activeStep === index
                       ? "border-primary bg-primary text-primary-foreground"
@@ -116,12 +115,12 @@ export default function HowItWorks() {
             ))}
           </nav>
 
-          <div className="relative overflow-hidden rounded-xl border bg-background p-6 shadow-sm min-h-[500px]">
+          <div className="relative overflow-hidden rounded-xl border bg-background p-6 shadow-sm min-h-[400px]">
             {steps.map((step, index) => (
               <div
                 key={step.id}
                 className={cn(
-                  "grid md:grid-cols-2 gap-8 transition-all duration-500 absolute inset-0 p-8",
+                  "transition-all duration-500 absolute inset-0 p-8",
                   activeStep === index
                     ? "translate-x-0 opacity-100"
                     : activeStep > index
@@ -131,17 +130,17 @@ export default function HowItWorks() {
                 aria-hidden={activeStep !== index}
                 id={`step-content-${step.id}`}
               >
-                <div className="flex flex-col justify-center">
-                  <h4 className="text-2xl font-semibold mb-4">{step.title}</h4>
-                  <p className="text-muted-foreground mb-6 leading-relaxed">{step.subtitle}</p>
-                  <ul className="space-y-3">
+                <div className="flex flex-col h-full">
+                  <h4 className="text-3xl font-semibold mb-6">{step.title}</h4>
+                  <p className="text-muted-foreground mb-8 leading-relaxed text-lg">{step.subtitle}</p>
+                  <ul className="space-y-5 max-w-2xl">
                     {step.description.map((item, i) => (
-                      <li key={i} className="flex items-start gap-3">
-                        <span className="h-6 w-6 rounded-full bg-primary/10 text-primary flex items-center justify-center mt-0.5 flex-shrink-0">
+                      <li key={i} className="flex items-start gap-4">
+                        <span className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center mt-0.5 flex-shrink-0">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="14"
-                            height="14"
+                            width="18"
+                            height="18"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
@@ -153,20 +152,10 @@ export default function HowItWorks() {
                             <polyline points="20 6 9 17 4 12"></polyline>
                           </svg>
                         </span>
-                        <span className="text-base">{item}</span>
+                        <span className="text-lg">{item}</span>
                       </li>
                     ))}
                   </ul>
-                </div>
-                <div className="flex items-center justify-center h-full">
-                  <Image
-                    src={step.image || "/placeholder.svg"}
-                    alt={step.imageAlt}
-                    width={500}
-                    height={600}
-                    className="rounded-lg object-cover h-[80%] w-auto"
-                    priority={index === 0}
-                  />
                 </div>
               </div>
             ))}

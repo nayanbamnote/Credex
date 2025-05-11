@@ -1,11 +1,21 @@
-import { cn } from '../../lib/utils'
+import { cn } from '@/lib/utils'
+import { ReactNode } from 'react'
+
+type WrapperSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
+
+interface MaxWidthWrapperProps {
+  className?: string;
+  children?: ReactNode;
+  size?: WrapperSize;
+  fullWidth?: boolean;
+}
 
 const MaxWidthWrapper = ({
   className,
   children,
   size = 'xl',
   fullWidth = false, 
-}) => {
+}: MaxWidthWrapperProps) => {
   const widthMap = {
     'xs': 'mx-auto w-full max-w-screen-sm px-2.5 md:px-6',
     'sm': 'mx-auto w-full max-w-screen-md px-2.5 md:px-8',
@@ -20,7 +30,7 @@ const MaxWidthWrapper = ({
     <div
       className={cn(
         'h-full ',
-        !fullWidth ? (widthMap[size] || widthMap.xl) : 'w-full',
+        !fullWidth ? widthMap[size] : 'w-full',
         className
       )}>
       {children}

@@ -1,46 +1,46 @@
 "use client";
 
 import { LinesPatternCard, LinesPatternCardBody } from "../ui/card-with-lines-patter";
-import { Shield, Clock, Headphones, Award } from "lucide-react";
+import { ShieldCheck, DollarSign, Globe, MessageCircle } from 'lucide-react'
 
 function WhyChooseUs() {
   const features = [
     {
-      icon: Shield,
-      title: "Secure Transactions",
-      description: "Bank-level security protocols to keep your financial data protected at all times."
+      icon: ShieldCheck,
+      title: "Verified Authenticity",
+      description: "All software licenses are thoroughly vetted to guarantee legitimacy and avoid fraud."
     },
     {
-      icon: Clock,
-      title: "Fast Approvals",
-      description: "Get quick decisions on your loan applications with our streamlined process."
+      icon: DollarSign,
+      title: "Maximum Returns",
+      description: "We offer top market prices for your unused or surplus licenses—get what you deserve."
     },
     {
-      icon: Headphones,
-      title: "24/7 Support",
-      description: "Our dedicated team is always available to assist you with any questions or concerns."
+      icon: Globe,
+      title: "Eco–Friendly Recycling",
+      description: "Extend the lifecycle of software and reduce digital waste by passing licenses on."
     },
     {
-      icon: Award,
-      title: "Competitive Rates",
-      description: "We offer some of the most competitive interest rates in the market."
+      icon: MessageCircle,
+      title: "Expert Guidance",
+      description: "Our specialists help you navigate licensing terms and optimize resale value."
     }
-  ];
+  ]
 
   return (
-    <section className="py-16 container mx-auto">
+    <section className="">
       <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold mb-4">Why Choose Us</h2>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
+        <h2 className="text-4xl font-bold tracking-tight sm:text-5xl mb-4">Why Choose Us</h2>
+        <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
           We're committed to providing exceptional financial services that meet your needs and exceed your expectations.
         </p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="flex flex-wrap justify-center gap-6 max-w-4xl mx-auto">
         {features.map((feature, index) => (
           <LinesPatternCard 
             key={index}
-            className="h-full transition-all hover:scale-105"
+            className="h-full transition-all hover:scale-105 w-full md:w-[calc(50%-12px)]"
             // patternClassName="bg-[length:20px_20px]"
           >
             <LinesPatternCardBody className="flex flex-col items-center text-center h-full ">

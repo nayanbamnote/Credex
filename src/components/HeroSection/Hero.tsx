@@ -40,11 +40,11 @@ const Hero = React.forwardRef<HTMLDivElement, HeroProps>(
     ref,
   ) => {
     return (
-      <div className={cn("relative", className)} ref={ref} {...props}>
-        <div className="absolute top-0 z-[0] h-screen w-screen bg-blue-950/10 dark:bg-blue-950/10 bg-[radial-gradient(ellipse_20%_80%_at_50%_-20%,rgba(59,130,246,0.15),rgba(255,255,255,0))] dark:bg-[radial-gradient(ellipse_20%_80%_at_50%_-20%,rgba(59,130,246,0.3),rgba(255,255,255,0))]" />
-        <section className="relative max-w-full mx-auto z-1">
+      <div className={cn("relative min-h-screen", className)} ref={ref} {...props}>
+        <div className="absolute top-0 z-[0] h-screen w-full bg-blue-950/10 dark:bg-blue-950/10 bg-[radial-gradient(ellipse_20%_80%_at_50%_-20%,rgba(59,130,246,0.15),rgba(255,255,255,0))] dark:bg-[radial-gradient(ellipse_20%_80%_at_50%_-20%,rgba(59,130,246,0.3),rgba(255,255,255,0))]" />
+        <section className="relative max-w-full mx-auto z-1 min-h-screen flex items-center">
           <RetroGrid />
-          <div className="max-w-screen-xl z-10 mx-auto px-4 py-28 gap-12 md:px-8">
+          <div className="max-w-screen-xl z-10 mx-auto px-4 py-20 md:px-8 w-full">
             <div className="space-y-5 max-w-3xl leading-0 lg:leading-5 mx-auto text-center">
               <h1 className="text-sm text-gray-600 dark:text-gray-400 group font-medium mx-auto px-5 py-2 bg-gradient-to-tr from-zinc-300/20 via-gray-400/20 to-transparent dark:from-zinc-300/5 dark:via-gray-400/5 border-[2px] border-black/5 dark:border-white/5 rounded-3xl w-fit">
                 {title}
@@ -59,28 +59,16 @@ const Hero = React.forwardRef<HTMLDivElement, HeroProps>(
                   <span key={i}>{word} </span>
                 )}
               </h2>
-              <p className="max-w-2xl mx-auto text-gray-600 dark:text-gray-300">
+              <p className="max-w-2xl mx-auto text-gray-600 dark:text-gray-300 text-base leading-relaxed px-4">
                 {subheading}
               </p>
-              <div className="items-center justify-center gap-x-4 space-y-3 sm:flex sm:space-y-0 pt-4">
-                <Button size="lg" className="px-8" asChild>
+              <div className="items-center justify-center gap-x-4 space-y-3 sm:flex sm:space-y-0 pt-8">
+                <Button size="lg" className="px-8 w-full sm:w-auto" asChild>
                   <a href={ctaHref}>{ctaText}</a>
                 </Button>
-                <Button size="lg" variant="outline" className="px-8" asChild>
+                <Button size="lg" variant="outline" className="px-8 w-full sm:w-auto mt-4 sm:mt-0" asChild>
                   <a href={secondaryCtaHref}>{ctaSecondaryText}</a>
                 </Button>
-              </div>
-            </div>
-            <div className="mt-20 mx-auto max-w-4xl relative z-10">
-              <div className="aspect-video w-full shadow-lg rounded-lg border border-gray-200 dark:border-gray-800 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 flex items-center justify-center">
-                <div className="text-center space-y-2">
-                  <div className="size-16 bg-blue-500/10 rounded-full mx-auto flex items-center justify-center">
-                    <div className="size-8 bg-blue-500/30 rounded-full flex items-center justify-center">
-                      <div className="size-4 bg-blue-500 rounded-full"></div>
-                    </div>
-                  </div>
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Dashboard Preview</p>
-                </div>
               </div>
             </div>
           </div>

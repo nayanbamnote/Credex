@@ -1,4 +1,15 @@
-import { cn } from '../../lib/utils'
+import { cn } from '@/lib/utils'
+import { ReactNode } from 'react'
+
+type SpacingSize = 'none' | 'xs' | 'small' | 'medium' | 'large' | 'xl';
+type SpacingOnly = 'top' | 'bottom' | undefined;
+
+interface SectionSpacerProps {
+  className?: string;
+  size?: SpacingSize;
+  only?: SpacingOnly;
+  children?: ReactNode;
+}
 
 /**
  * SectionSpacer component adds vertical padding sections
@@ -13,7 +24,7 @@ const SectionSpacer = ({
   size = 'medium',
   only,
   children,
-}) => {
+}: SectionSpacerProps) => {
   // Define spacing for both top and bottom separately
   const spacingMapTop = {
     none: 'pt-0',
@@ -45,11 +56,11 @@ const SectionSpacer = ({
   // Select the appropriate spacing class based on 'only' prop
   let spacingClass;
   if (only === 'top') {
-    spacingClass = spacingMapTop[size] || spacingMapTop.medium;
+    spacingClass = spacingMapTop[size];
   } else if (only === 'bottom') {
-    spacingClass = spacingMapBottom[size] || spacingMapBottom.medium;
+    spacingClass = spacingMapBottom[size];
   } else {
-    spacingClass = spacingMapBoth[size] || spacingMapBoth.medium;
+    spacingClass = spacingMapBoth[size];
   }
 
   return (
