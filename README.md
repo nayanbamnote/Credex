@@ -2,8 +2,8 @@
 
 SoftSell is a modern web application that serves as a marketplace for buying and selling unused software licenses. The platform allows businesses to transform their unused software assets into revenue while helping other organizations save up to 70% compared to retail prices.
 
-![SoftSell Screenshot](/images/softsell-screenshot-light.png)
-![SoftSell Screenshot](/images/softsell-screenshot.png)
+![SoftSell Screenshot](https://mbya44g66a.ufs.sh/f/5SMTRv60wQLrwXb892IGU7xYkCMovPAb5NZ3i8Q0mT9IthyR)
+![SoftSell Screenshot](https://mbya44g66a.ufs.sh/f/5SMTRv60wQLrbWUR5opMkdpOf7lhgaBzFH2XxWeCNt6yURjs)
 
 ## Features Implemented
 
