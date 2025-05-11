@@ -9,7 +9,6 @@ import ContactUs from "@/components/ContactUs";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import SectionSpacer from "@/components/SectionSpacer";
 import { ChatbotWidget } from "@/components/Chatbot/ChatbotWidget";
-import ChatBot from "@/components/Chatbot/ChatBot";
 
 export default function Home() {
   return (
@@ -18,7 +17,7 @@ export default function Home() {
       <Header />
 
       {/* Hero Section */}
-      {/* <main className="flex-1 ">
+      <main className="flex-1 ">
         <Hero
           title="Software License Marketplace"
           headline="Transform Unused Software into Revenue"
@@ -49,21 +48,19 @@ export default function Home() {
             <ContactUs />
           </MaxWidthWrapper>
         </SectionSpacer>
-      </main> */}
-
-      <ChatBot />
+      </main>
 
       {/* Footer */}
       <footer className="border-t border-border">
         <div className="flex flex-col md:flex-row justify-between items-center py-8 px-4 md:px-6 max-w-screen-xl mx-auto">
           <div className="flex items-center gap-2 font-bold mb-4 md:mb-0">
             <div className="size-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
-              C
+              S
             </div>
-            <span>Credex</span>
+            <span>SoftSell</span>
           </div>
           <p className="text-sm text-muted-foreground">
-            © 2024 Credex. All rights reserved.
+            © 2024 SoftSell. All rights reserved.
           </p>
         </div>
       </footer>

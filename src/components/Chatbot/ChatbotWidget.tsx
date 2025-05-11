@@ -1,17 +1,44 @@
 'use client'
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import { MessageCircle, X, Send } from "lucide-react"
+import { MessageCircle, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { cn } from "@/lib/utils"
+import ChatBot from "./ChatBot"
 
 export function ChatbotWidget() {
   const [isOpen, setIsOpen] = useState(false)
   const [showInitialAnimation, setShowInitialAnimation] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  const chatContainerRef = useRef<HTMLDivElement>(null)
+
+  // Check for mobile viewport
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Fix for viewport height on mobile
+  useEffect(() => {
+    const updateViewportHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+
+    updateViewportHeight();
+    window.addEventListener('resize', updateViewportHeight);
+    window.addEventListener('orientationchange', updateViewportHeight);
+    return () => {
+      window.removeEventListener('resize', updateViewportHeight);
+      window.removeEventListener('orientationchange', updateViewportHeight);
+    };
+  }, []);
 
   useEffect(() => {
     // Delay the initial animation to ensure it plays after page load
@@ -22,28 +49,80 @@ export function ChatbotWidget() {
     return () => clearTimeout(timer)
   }, [])
 
+  // Handle body scroll when chat is open on mobile
+  useEffect(() => {
+    if (isOpen && isMobile) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.height = '100%';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+    };
+  }, [isOpen, isMobile]);
+
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-[425px] md:max-w-[550px] max-h-[70vh] overflow-y-auto border border-neutral-200 dark:border-neutral-800 shadow-lg">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <MessageCircle className="size-5 text-blue-500" />
-              <span>Credex Assistant</span>
-              <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent h-px" />
-            </DialogTitle>
-          </DialogHeader>
-          <div className="h-[400px] flex items-center justify-center text-muted-foreground">
-            Chatbot functionality will be implemented here
-          </div>
-          <div className="border-t border-neutral-200 dark:border-neutral-800 pt-4 flex justify-end">
-            <Button variant="outline" size="sm" onClick={() => setIsOpen(false)}
-                   className="text-xs font-medium relative border-neutral-200 dark:border-white/[0.2] hover:bg-neutral-100 dark:hover:bg-neutral-800/50">
-              Close
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+    <div className="fixed bottom-6 right-6 z-[100]">
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            ref={chatContainerRef}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.3 }}
+            style={isMobile ? { 
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              width: '100%',
+              height: '100%',
+              maxHeight: '-webkit-fill-available',
+              zIndex: 9999,
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column'
+            } : undefined}
+            className={isMobile 
+              ? "bg-background text-foreground md:fixed md:inset-auto md:bottom-16 md:right-0 md:w-[450px] md:h-[600px] md:rounded-lg md:border md:border-border md:shadow-lg"
+              : "fixed bottom-16 right-0 w-[450px] h-[600px] rounded-lg border border-border shadow-lg z-[9999] bg-background text-foreground overflow-hidden"
+            }
+          >
+            <div className="flex flex-col h-full">
+              <div className="p-3 border-b border-border bg-background">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-foreground">
+                    <MessageCircle className="size-5 text-primary" />
+                    <span className="font-medium">Credex Assistant</span>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-7 w-7 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+              <div className="flex-1 overflow-hidden">
+                <ChatBot />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <motion.button
         initial={{ scale: 0.8, opacity: 0 }}
@@ -58,14 +137,13 @@ export function ChatbotWidget() {
         whileHover={{
           scale: 1.05,
           rotate: isOpen ? 0 : 5,
-          boxShadow: "0 0 15px rgba(59, 130, 246, 0.5)",
+          boxShadow: "0 0 15px rgba(var(--primary), 0.5)",
         }}
         onClick={() => setIsOpen(!isOpen)}
-        className="relative flex items-center justify-center w-14 h-14 rounded-full bg-white dark:bg-black border border-neutral-200 dark:border-white/[0.2] text-neutral-600 dark:text-white shadow-lg hover:shadow-xl transition-all duration-300"
+        className="relative flex items-center justify-center w-14 h-14 rounded-full bg-background border border-border text-foreground shadow-lg hover:shadow-xl transition-all duration-300"
       >
-        {/* <span className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent rounded-t-full" /> */}
         <span
-          className="absolute inset-0 rounded-full animate-ping bg-blue-500/20 opacity-75"
+          className="absolute inset-0 rounded-full animate-ping bg-primary/20 opacity-75"
           style={{ animationDuration: "2s" }}
         ></span>
         <motion.div animate={{ rotate: isOpen ? 90 : 0 }} transition={{ duration: 0.3 }}>

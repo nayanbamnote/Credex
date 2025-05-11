@@ -1,8 +1,12 @@
 'use client'
 import React, { useState, useEffect, useRef } from 'react';
-import Head from 'next/head';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { marked } from 'marked';
+import { SendIcon } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ChatMessage {
   content: string;
@@ -58,6 +62,14 @@ IMPORTANT INSTRUCTIONS:
 5. Maintain a professional but friendly tone at all times.
 
 Your ONLY purpose is to provide information about SoftSell's services and redirect any unrelated questions.`;
+
+const EXAMPLE_QUESTIONS = [
+  'How do I sell my license?',
+  'What types of software can I resell?', 
+  'How does your verification process work?',
+  'What\'s your commission rate?',
+  'How fast do I get paid?'
+];
 
 const responses: Record<string, string> = {
   'How do I sell my license?':
@@ -136,15 +148,26 @@ const ChatBot = () => {
   const [userInput, setUserInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [contextCache, setContextCache] = useState<CacheObject | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   const messageContainerRef = useRef<HTMLDivElement>(null);
   const userInputRef = useRef<HTMLTextAreaElement>(null);
   const generativeClient = useRef<GoogleGenerativeAI | null>(null);
   const modelRef = useRef<any>(null);
   const chatRef = useRef<any>(null);
 
+  // Check if on mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   useEffect(() => {
     initializeGenerativeAI();
-    autoResizeTextarea();
   }, []);
 
   useEffect(() => {
@@ -206,23 +229,22 @@ const ChatBot = () => {
     });
   };
 
-  const autoResizeTextarea = () => {
-    const textarea = userInputRef.current;
-    if (textarea) {
-      textarea.addEventListener('input', () => {
-        textarea.style.height = 'auto';
-        textarea.style.height = `${Math.min(textarea.scrollHeight, 150)}px`;
-      });
-    }
-  };
-
   const sendMessage = async () => {
     const message = userInput.trim();
     if (!message) return;
 
-    const newUserMessage: ChatMessage = { content: message, isUser: true, timestamp: new Date() };
+    // Add user message to chat history first
+    const newUserMessage: ChatMessage = { 
+      content: message, 
+      isUser: true, 
+      timestamp: new Date() 
+    };
     setChatHistory(prev => [...prev, newUserMessage]);
+    
+    // Clear the input field
     setUserInput('');
+    
+    // Show typing indicator
     setIsTyping(true);
 
     try {
@@ -230,35 +252,45 @@ const ChatBot = () => {
         throw new Error("Generative AI not initialized");
       }
 
-      // Stream response for better UX
+      // Get response from AI
       const result = await chatRef.current.sendMessageStream(message);
       
-      // Create initial bot message
-      const initialBotMessage: ChatMessage = { content: "", isUser: false, timestamp: new Date() };
-      setChatHistory(prev => [...prev, initialBotMessage]);
-      
       let fullResponse = "";
-      // Get the index for updating the message
-      const responseIndex = chatHistory.length;
       
       // Process stream chunks
       for await (const chunk of result.stream) {
         const chunkText = chunk.text ? chunk.text() : "";
         fullResponse += chunkText;
         
+        // Update the bot's response as chunks come in
         setChatHistory(prev => {
-          const updatedHistory = [...prev];
-          updatedHistory[responseIndex] = { 
-            ...updatedHistory[responseIndex], 
-            content: formatMessage(fullResponse) 
-          };
-          return updatedHistory;
+          const lastMessage = prev[prev.length - 1];
+          
+          // If the last message is from the bot, update it
+          if (!lastMessage.isUser) {
+            const updatedHistory = [...prev];
+            updatedHistory[prev.length - 1] = { 
+              ...lastMessage, 
+              content: formatMessage(fullResponse)
+            };
+            return updatedHistory;
+          } 
+          // Otherwise, add a new bot message
+          else {
+            return [
+              ...prev, 
+              { 
+                content: formatMessage(fullResponse), 
+                isUser: false, 
+                timestamp: new Date() 
+              }
+            ];
+          }
         });
       }
       
       // Manage context window
       if (chatHistory.length > MAX_CONTEXT_LENGTH) {
-        // Keep only the last MAX_CONTEXT_LENGTH messages
         setChatHistory(prev => [...prev.slice(prev.length - MAX_CONTEXT_LENGTH)]);
       }
       
@@ -282,6 +314,36 @@ const ChatBot = () => {
 
   const formatMessage = (content: string): string => {
     return marked(content);
+  };
+
+  const formatMessageForMobile = (content: string): string => {
+    // Process with marked first
+    let htmlContent = marked(content);
+    
+    // Make tables responsive
+    htmlContent = htmlContent.replace(
+      /<table>/g, 
+      '<div class="overflow-x-auto w-full"><table class="w-full text-left border-collapse" style="max-width: 100%">'
+    ).replace(
+      /<\/table>/g, 
+      '</table></div>'
+    );
+    
+    // Add different classes based on viewport size
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 640;
+    
+    // Add additional classes to elements for better mobile display
+    htmlContent = htmlContent
+      .replace(/<pre>/g, `<pre class="overflow-x-auto p-1 ${isMobile ? 'text-2xs' : 'text-xs'} bg-black/30 rounded my-1" style="max-width: 100%;">`)
+      .replace(/<code>/g, `<code class="font-mono ${isMobile ? 'text-2xs' : 'text-xs'}" style="word-break: break-word;">`)
+      .replace(/<li>/g, '<li class="ml-3 mb-0.5" style="word-break: break-word;">')
+      .replace(/<ul>/g, '<ul class="my-1 pl-1">')
+      .replace(/<ol>/g, '<ol class="my-1 pl-1">')
+      .replace(/<h[1-6]>/g, (match) => `${match.slice(0, -1)} class="font-bold my-1 text-xs sm:text-sm">`)
+      .replace(/<p>/g, '<p class="my-1" style="word-break: break-word;">')
+      .replace(/<a\s/g, '<a class="text-blue-400 underline" style="word-break: break-all;" ');
+    
+    return htmlContent;
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -311,73 +373,124 @@ const ChatBot = () => {
   };
 
   return (
-    <>
-      <Head>
-        <title>Software Resale Assistant</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </Head>
-      <div className="app-container">
-        <div className="chat-header">
-          <h1>Software Resale Assistant</h1>
-          <p>Ask me anything about software licensing and resale.</p>
-        </div>
-
-        <div className="chat-container">
-          <div className="messages" ref={messageContainerRef}>
-            {chatHistory.map((msg, index) => (
-              <div key={index} className={`message ${msg.isUser ? 'user' : 'bot'}`}>
-                <div className="avatar">{msg.isUser ? '👤' : '🤖'}</div>
-                <div className="message-content" dangerouslySetInnerHTML={{ __html: msg.content }} />
-              </div>
-            ))}
-            {isTyping && (
-              <div className="message bot">
-                <div className="avatar">🤖</div>
-                <div className="typing-indicator">
-                  <div className="typing-dot"></div>
-                  <div className="typing-dot"></div>
-                  <div className="typing-dot"></div>
+    <div className="flex flex-col h-full">
+      <div 
+        ref={messageContainerRef}
+        className="flex-1 overflow-y-auto p-2 sm:p-4 space-y-3 bg-background/90"
+        style={{ scrollbarWidth: 'thin', scrollbarColor: 'var(--muted) transparent' }}
+      >
+        {chatHistory.map((msg, index) => (
+          <div 
+            key={index} 
+            className={`flex ${msg.isUser ? 'justify-end' : 'justify-start'}`}
+          >
+            <div className={`flex max-w-[85%] gap-1 sm:gap-2 ${msg.isUser ? 'flex-row-reverse' : 'flex-row'}`}>
+              {!msg.isUser && (
+                <div className="flex-shrink-0 mt-1">
+                  <Avatar className="h-6 w-6 sm:h-8 sm:w-8 bg-primary">
+                    <AvatarFallback className="text-xs text-primary-foreground">
+                      🤖
+                    </AvatarFallback>
+                  </Avatar>
                 </div>
+              )}
+              
+              <div 
+                className={`px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm ${
+                  msg.isUser 
+                    ? 'bg-primary text-primary-foreground rounded-tr-none' 
+                    : 'bg-muted text-foreground rounded-tl-none'
+                }`}
+                style={{ 
+                  wordBreak: 'break-word', 
+                  maxWidth: '95%',
+                  width: 'auto'
+                }}
+              >
+                <div 
+                  className="prose-xs sm:prose-sm max-w-full break-words text-current"
+                  style={{ 
+                    lineHeight: '1.4',
+                    wordBreak: 'break-word'
+                  }}
+                  dangerouslySetInnerHTML={{ __html: formatMessageForMobile(msg.content) }}
+                />
               </div>
-            )}
-          </div>
-
-          <div className="example-questions">
-            <h3>Example Questions</h3>
-            <div className="question-chips">
-              <button className="question-chip" onClick={() => handleQuestionClick('How do I sell my license?')}>How do I sell my license?</button>
-              <button className="question-chip" onClick={() => handleQuestionClick('What types of software can I resell?')}>What types of software can I resell?</button>
-              <button className="question-chip" onClick={() => handleQuestionClick('How does your verification process work?')}>How does verification work?</button>
-              <button className="question-chip" onClick={() => handleQuestionClick('What\'s your commission rate?')}>What's your commission rate?</button>
-              <button className="question-chip" onClick={() => handleQuestionClick('How fast do I get paid?')}>How fast do I get paid?</button>
             </div>
           </div>
-
-          <div className="input-area">
-            <textarea
-              ref={userInputRef}
-              id="userInput"
-              placeholder="Type your question here..."
-              rows={1}
-              value={userInput}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
-            ></textarea>
-            <button id="sendButton" onClick={handleSendButtonClick} disabled={isTyping}>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
-              </svg>
-            </button>
+        ))}
+        
+        {isTyping && (
+          <div className="flex justify-start">
+            <div className="flex max-w-[90%] sm:max-w-[85%] gap-1 sm:gap-2">
+              <div className="flex-shrink-0 mt-1">
+                <Avatar className="h-6 w-6 sm:h-8 sm:w-8 bg-primary">
+                  <AvatarFallback className="text-xs text-primary-foreground">🤖</AvatarFallback>
+                </Avatar>
+              </div>
+              <div className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm bg-muted text-foreground rounded-tl-none flex items-center">
+                <div className="flex space-x-1">
+                  <div className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-muted-foreground animate-pulse delay-0"></div>
+                  <div className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-muted-foreground animate-pulse delay-150"></div>
+                  <div className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-muted-foreground animate-pulse delay-300"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      
+      <div className="px-2 sm:px-4 py-2 sm:py-3 bg-background/95">
+        <div className="space-y-1 sm:space-y-2">
+          <div className="flex items-center px-1">
+            <h3 className="text-2xs sm:text-xs font-medium text-muted-foreground">Suggested Questions</h3>
+          </div>
+          <div className="flex flex-wrap gap-1 sm:gap-2">
+            {EXAMPLE_QUESTIONS.map((question, index) => (
+              <Button 
+                key={index} 
+                variant="outline" 
+                size="sm" 
+                className="h-6 sm:h-7 px-2 sm:px-3 text-2xs sm:text-xs rounded-full bg-muted hover:bg-muted/80 text-muted-foreground border-border"
+                onClick={() => handleQuestionClick(question)}
+              >
+                {isMobile ? 
+                  (question.length > 15 ? question.substring(0, 15) + '...' : question) : 
+                  question}
+              </Button>
+            ))}
           </div>
         </div>
       </div>
-    </>
+      
+      <div className="p-2 sm:p-3 bg-background/95 border-t border-border">
+        <form 
+          className="flex w-full items-end gap-1 sm:gap-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            sendMessage();
+          }}
+        >
+          <Textarea
+            ref={userInputRef}
+            placeholder="Type your message..."
+            value={userInput}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            className="min-h-8 sm:min-h-10 rounded-xl resize-none bg-muted border-border text-foreground focus-visible:ring-primary/30 placeholder:text-muted-foreground text-xs sm:text-sm px-2 py-1.5 sm:px-3 sm:py-2"
+          />
+          <Button 
+            type="submit"
+            size="icon" 
+            className="shrink-0 h-8 w-8 sm:h-10 sm:w-10 rounded-xl bg-primary hover:bg-primary/90"
+            disabled={isTyping || !userInput.trim()} 
+          >
+            <SendIcon className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="sr-only">Send message</span>
+          </Button>
+        </form>
+      </div>
+    </div>
   );
 };
 

@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SoftSell - Software License Marketplace
+
+SoftSell is a modern web application that serves as a marketplace for buying and selling unused software licenses. The platform allows businesses to transform their unused software assets into revenue while helping other organizations save up to 70% compared to retail prices.
+
+![SoftSell Screenshot](/public/images/softsell-screenshot-light.png)
+![SoftSell Screenshot](/public/images/softsell-screenshot.png)
+
+## Features Implemented
+
+### User Interface Components
+- **Responsive Header**: Navigation bar with theme toggle and mobile support
+- **Hero Section**: Dynamic hero section highlighting the platform's value proposition
+- **How It Works**: Step-by-step guide explaining the license selling process
+- **Why Choose Us**: Feature showcase highlighting platform benefits
+- **Testimonials**: Real customer feedback to build trust
+- **Contact Form**: Interactive form with validation for user inquiries
+- **Live Chat Support**: Chatbot widget to assist users in real-time
+- **Dark/Light Mode**: Theme toggle for better user experience
+
+### Technical Features
+- **SEO Optimization**: Comprehensive meta tags for better search engine visibility
+- **Responsive Design**: Mobile-first approach ensuring seamless experience across all devices
+- **Accessibility**: ARIA-compliant components for inclusive user experience
+- **Performance Optimization**: Optimized components and assets for fast loading times
+- **Form Validation**: Client-side validation using Zod schema validation
+- **Animation Effects**: Subtle animations using Framer Motion for enhanced UX
+
+## Design Choices
+
+### Tech Stack
+- **Next.js**: For server-side rendering and improved SEO
+- **TypeScript**: For type safety and improved developer experience
+- **Tailwind CSS**: For utility-first styling approach
+- **Shadcn UI**: For high-quality, accessible UI components
+- **Framer Motion**: For smooth animations and transitions
+- **React Hook Form**: For efficient form handling
+- **Zod**: For schema validation
+- **Lucide Icons**: For consistent iconography
+
+### Architecture
+- **Component-Based**: Modular architecture for better code organization and reusability
+- **Client-Server Model**: Clear separation of frontend and backend concerns
+- **Responsive Design**: Mobile-first approach with adaptive layout techniques
+- **Theme System**: Dark/light mode toggle with system preference detection
+- **Utility-First CSS**: Consistent styling approach using Tailwind CSS
+
+### UI/UX Decisions
+- **Clean, Modern Design**: Professional aesthetic with ample white space
+- **Intuitive Navigation**: Clear site structure with logical information hierarchy
+- **Micro-interactions**: Subtle animations and transitions for better engagement
+- **Accessibility**: High contrast, keyboard navigation, and screen reader support
+- **Consistent Brand Elements**: Coherent color scheme, typography, and visual language
+
+## Time Spent
+
+The development of this project took approximately:
+
+**Total Time**: Approximately 8-10 hours
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+- Node.js 18.x or later
+- npm or yarn
 
+### Installation
+1. Clone the repository:
+```bash
+git clone https://github.com/nayanbamnote/Credex.git
+cd softsell
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Run the development server:
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

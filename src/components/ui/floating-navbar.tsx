@@ -99,34 +99,36 @@ export const FloatingNav = ({
             duration: 0.2,
           }}
           className={cn(
-            "flex fixed top-4 inset-x-0 mx-auto border border-transparent dark:border-white/[0.2] rounded-full dark:bg-black bg-white shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] z-[5000] px-4 py-2 items-center justify-between w-[95%] sm:max-w-2xl",
+            "flex fixed top-4 inset-x-0 mx-auto border border-transparent dark:border-white/[0.2] rounded-full dark:bg-black bg-white shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] z-[50] px-4 py-2 items-center justify-between w-[95%] sm:max-w-2xl",
             className
           )}
         >
           {showLogo && (
-            <div className="flex items-center gap-2 font-bold mr-3">
-              <div className="size-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs">C</div>
-              <span className="text-sm">Credex</span>
+            <div className="flex items-center gap-2 font-bold">
+              <div className="size-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs">S</div>
+              <span className="text-sm">SoftSell</span>
             </div>
           )}
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center justify-center space-x-3">
-            {navItems.map((navItem, idx) => (
-              <Link
-                key={`desktop-link-${idx}`}
-                href={navItem.link}
-                className={cn(
-                  "relative dark:text-neutral-50 items-center flex space-x-1 text-neutral-600 dark:hover:text-neutral-300 hover:text-neutral-500 px-2"
-                )}
-              >
-                {navItem.icon && <span>{navItem.icon}</span>}
-                <span className="text-sm">{navItem.name}</span>
-              </Link>
-            ))}
+          <div className="hidden md:flex items-center justify-center flex-1 mx-4">
+            <div className="flex items-center justify-center space-x-5 mx-auto">
+              {navItems.map((navItem, idx) => (
+                <Link
+                  key={`desktop-link-${idx}`}
+                  href={navItem.link}
+                  className={cn(
+                    "relative dark:text-neutral-50 items-center flex space-x-1 text-neutral-600 dark:hover:text-neutral-300 hover:text-neutral-500 px-2"
+                  )}
+                >
+                  {navItem.icon && <span>{navItem.icon}</span>}
+                  <span className="text-sm">{navItem.name}</span>
+                </Link>
+              ))}
+            </div>
           </div>
           
-          <div className="flex items-center gap-2 ml-auto">
+          <div className="flex items-center gap-2">
             {showThemeToggle && <ThemeToggle />}
             <button className="hidden sm:block border text-xs font-medium relative border-neutral-200 dark:border-white/[0.2] text-black dark:text-white px-3 py-1.5 rounded-full">
               <span>Login</span>
@@ -160,7 +162,7 @@ export const FloatingNav = ({
               duration: 0.15, 
               ease: [0.4, 0.0, 0.2, 1]
             }}
-            className="fixed top-[72px] right-4 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 p-4 shadow-lg rounded-2xl w-[220px] z-[4999] overflow-hidden"
+            className="fixed top-[72px] right-4 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 p-4 shadow-lg rounded-2xl w-[220px] z-[49] overflow-hidden"
             style={{
               backdropFilter: "blur(16px)",
               WebkitBackdropFilter: "blur(16px)"
